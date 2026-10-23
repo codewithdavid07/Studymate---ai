@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyMate AI - Session Assistant</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#f4f7ff;font-family:Arial,sans-serif;padding:20px}
+main{max-width:650px;margin:auto}
+header,.panel{background:#121a2e;border:1px solid #293653;border-radius:18px;padding:20px;margin-bottom:16px}
+h1{margin:0 0 8px;color:#65e6ce}
+p{color:#c4cee1;line-height:1.5}
+label{display:block;margin:15px 0 7px}
+input,select,button{width:100%;padding:13px;border-radius:10px;font-size:16px}
+input,select{background:#0b1020;color:white;border:1px solid #45516b}
+button{background:#65e6ce;color:#07131b;border:0;font-weight:bold;margin-top:16px}
+.result{white-space:pre-line;background:#0b1020;border-radius:12px;padding:15px;margin-top:16px;line-height:1.7}
+.small{font-size:13px;color:#9eabc5}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>📚 StudyMate AI</h1>
+<p>Your Study Session Assistant</p>
+<p class="small">Plan your time, focus on a topic, and practise with a quiz.</p>
+</header>
+<section class="panel">
+<h2>✨ Plan my study session</h2>
+<label for="topic">What do you want to study?</label>
+<input id="topic" placeholder="Example: Python loops">
+<label for="time">Available time</label>
+<select id="time">
+<option value="30">30 minutes</option>
+<option value="45">45 minutes</option>
+<option value="60">60 minutes</option>
+<option value="90">90 minutes</option>
+</select>
+<label for="goal">Your goal</label>
+<select id="goal">
+<option value="learn">Learn a new topic</option>
+<option value="revise">Revise a topic</option>
+<option value="quiz">Prepare for a quiz</option>
+</select>
+<button id="planBtn">Create my study plan</button>
+<div id="plan" class="result" hidden></div>
+</section>
+<section class="panel">
+<h2>🧠 Quick Python Quiz</h2>
+<p>What is the output of <code>print(2 + 3)</code>?</p>
+<button data-answer="4">4</button>
+<button data-answer="5">5</button>
+<button data-answer="6">6</button>
+<div id="feedback" class="result" hidden></div>
+</section>
+<p class="small">Demo version: plans and quiz feedback run in your browser. No live AI model or Alexa+ connection is included.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+$("planBtn").addEventListener("click",()=>{
+ const topic=$("topic").value.trim();
+ if(!topic){$("plan").hidden=false;$("plan").textContent="Please enter a topic first.";return;}
+ const mins=Number($("time").value);
+ const goal=$("goal").value;
+ const first=Math.round(mins*.2);
+ const second=Math.round(mins*.6);
+ const last=mins-first-second;
+ const intro=goal==="revise"?"Review what you already know":goal==="quiz"?"Recall key facts and practise questions":"Learn the main concepts";
+ $("plan").textContent=
+ "Your "+mins+"-minute session: "+topic+"\n\n"+
+ "1. "+first+" min — "+intro+" about "+topic+".\n"+
+ "2. "+second+" min — Work through examples and practise.\n"+
+ "3. "+last+" min — Summarise what you learned and check your understanding.\n\n"+
+ "Tip: Put your phone on silent and take a short break after the session.";
+ $("plan").hidden=false;
+});
+document.querySelectorAll("[data-answer]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  $("feedback").hidden=false;
+  $("feedback").textContent=btn.dataset.answer==="5"
+  ?"✅ Correct! 2 + 3 = 5. Great work!"
+  :"❌ Not quite. Try adding 2 and 3 again. The correct answer is 5.";
+ });
+});
+</script>
+</body>
+</html>
